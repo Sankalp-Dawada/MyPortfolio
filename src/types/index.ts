@@ -12,3 +12,13 @@ export interface User {
   uid: string;
   email: string | null;
 }
+
+export interface Certificate {
+  id: string;
+  title: string;
+  description: string;
+  date: string;
+  imageUrl?: string;
+  issuedBy: string;
+  createdAt: number;
+}

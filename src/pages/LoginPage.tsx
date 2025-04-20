@@ -15,16 +15,17 @@ const AdminLoginForm: React.FC = () => {
     setIsLoading(true);
 
     try {
-      // Try to login with Firestore admin credentials
       const user = await loginWithAdminFirestore(email, password);
       
       if (user) {
-        // Store the admin user in session storage for persistence
         sessionStorage.setItem('adminUser', JSON.stringify(user));
         
         console.log('Admin login successful, redirecting to dashboard');
-        navigate('/dashboard'); // Redirect to dashboard or home page
-      } else {
+        
+        navigate('/'); 
+      
+      } 
+      else {
         setError('Invalid email or password. Please check your credentials and try again.');
       }
     } catch (err) {

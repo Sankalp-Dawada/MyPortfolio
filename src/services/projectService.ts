@@ -1,12 +1,8 @@
-// src/services/projectService.ts
-
 import { v4 as uuidv4 } from 'uuid';
 import { Project } from '../types';
 
-// Local storage key for projects
 const PROJECTS_STORAGE_KEY = 'portfolio_projects';
 
-// Get all projects from local storage
 export const getProjects = (): Project[] => {
   const projectsJson = localStorage.getItem(PROJECTS_STORAGE_KEY);
   if (!projectsJson) return [];
@@ -20,7 +16,6 @@ export const getProjects = (): Project[] => {
   }
 };
 
-// Add a new project
 export const addProject = (projectData: Omit<Project, 'id' | 'createdAt'>): Project => {
   const newProject: Project = {
     id: uuidv4(),
@@ -29,34 +24,30 @@ export const addProject = (projectData: Omit<Project, 'id' | 'createdAt'>): Proj
   };
   
   const projects = getProjects();
-  projects.unshift(newProject); // Add new project to beginning of array
+  projects.unshift(newProject); 
   
   localStorage.setItem(PROJECTS_STORAGE_KEY, JSON.stringify(projects));
   
-  // Trigger storage event for other tabs
   window.dispatchEvent(new Event('storage'));
   
   return newProject;
 };
 
-// Delete a project by id
 export const deleteProject = (id: string): boolean => {
   const projects = getProjects();
   const filteredProjects = projects.filter(project => project.id !== id);
   
   if (filteredProjects.length === projects.length) {
-    return false; // No project was deleted
+    return false; 
   }
   
   localStorage.setItem(PROJECTS_STORAGE_KEY, JSON.stringify(filteredProjects));
   
-  // Trigger storage event for other tabs
   window.dispatchEvent(new Event('storage'));
   
   return true;
 };
 
-// Search projects by title or description
 export const searchProjects = (query: string): Project[] => {
   const projects = getProjects();
   const lowercasedQuery = query.toLowerCase();
@@ -67,19 +58,15 @@ export const searchProjects = (query: string): Project[] => {
   );
 };
 
-// Generate project description using first few lines of the file content
 export const generateProjectDescription = async (fileContent: string): Promise<string> => {
-  // In a real app, this would call an AI service or API
-  // For now, we'll simulate by extracting content from the file
+
   try {
-    // Extract first few lines or a chunk of text for the description
     const lines = fileContent.split('\n').filter(line => line.trim() !== '');
     
     if (lines.length === 0) {
       return "This project doesn't have a description yet.";
     }
     
-    // Find the first comment block if it exists (often contains project description)
     const commentBlockLines = [];
     let inCommentBlock = false;
     
@@ -95,7 +82,6 @@ export const generateProjectDescription = async (fileContent: string): Promise<s
           break;
         }
         
-        // Clean up comment symbols
         const cleanedLine = line.replace(/^\s*\*\s*/, '').trim();
         if (cleanedLine) {
           commentBlockLines.push(cleanedLine);
@@ -107,7 +93,6 @@ export const generateProjectDescription = async (fileContent: string): Promise<s
       return commentBlockLines.join(' ');
     }
     
-    // If no comment block found, extract first few non-empty lines
     const firstFewLines = lines.slice(0, 5).join(' ');
     return `Project based on ${firstFewLines.substring(0, 200)}...`;
     
