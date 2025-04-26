@@ -71,13 +71,13 @@ const Header: React.FC<HeaderProps> = ({ onSearch }) => {
           <Link to="/#projects" className="hover:text-teal-400 transition-colors">
             Projects
           </Link>
-          <Link to="/#Certification" className="hover:text-teal-400 transition-colors">Certification</Link>
+          <Link to="/#certificates" className="hover:text-teal-400 transition-colors">Certification</Link>
           {isAuthenticated ? (
             <>
-              <Link to="/add-project" className="hover:text-teal-400 transition-colors">
+              {/* <Link to="/add-project" className="hover:text-teal-400 transition-colors">
                 Add Project
               </Link>
-              <Link to="/add-certificates" className="hover:text-teal-400 transition-colors">Add Certificates</Link>
+              <Link to="/add-certificates" className="hover:text-teal-400 transition-colors">Add Certificates</Link> */}
               <button
                 onClick={handleLogout}
                 className="hover:text-teal-400 transition-colors"

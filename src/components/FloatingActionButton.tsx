@@ -12,7 +12,7 @@ const FloatingActionButton: React.FC = () => {
       className="fixed right-6 bottom-6 z-10"
     >
       <Link 
-        to="/add-project"
+        to="/add-item-selection"
         className="flex items-center justify-center w-14 h-14 bg-teal-600 hover:bg-teal-700 text-white rounded-full shadow-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500"
         aria-label="Add project"
       >
