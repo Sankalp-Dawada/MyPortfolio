@@ -3,9 +3,10 @@ export interface Project {
   title: string;
   date: string;
   description: string;
-  imageUrl: string;
+  imageurl: string;
   githubUrl: string;
   createdAt: number;
+  liveDemoUrl?: string;
 }
 
 export interface User {
@@ -18,7 +19,7 @@ export interface Certificate {
   title: string;
   description: string;
   date: string;
-  imageUrl?: string;
+  imageurl: string;
   issuedBy: string;
   createdAt: number;
 }

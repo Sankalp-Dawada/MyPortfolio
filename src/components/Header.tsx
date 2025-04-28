@@ -52,7 +52,7 @@ const Header: React.FC<HeaderProps> = ({ onSearch }) => {
           <form onSubmit={handleSearch} className="flex w-full">
             <input
               type="text"
-              placeholder="Search projects..."
+              placeholder="Search projects and certificates..."
               className="bg-transparent py-2 px-2 flex-grow focus:outline-none text-sm"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}

@@ -28,7 +28,7 @@ const CertificateCard: React.FC<CertificateCardProps> = ({ certificate, isAuthen
     >
       <div className="relative overflow-hidden h-48">
         <img
-          src={certificate.imageUrl || fallbackImage}
+          src={certificate.imageurl || fallbackImage}
           alt={`${certificate.title} preview`}
           className="w-full h-full object-cover object-center transition-transform hover:scale-105 duration-500"
           onError={(e) => {

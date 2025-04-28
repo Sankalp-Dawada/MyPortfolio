@@ -1,41 +1,23 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Upload, AlertCircle, Loader, X } from 'lucide-react';
-import { addCertificate } from '../services/certificateService'; // You'll need to create this
-
+import { AlertCircle, Loader } from 'lucide-react';
+import { addCertificate } from '../services/certificateService'; 
 interface AddCertificateFormProps {
   onCertificateAdded: () => void;
 }
 
 const AddCertificateForm: React.FC<AddCertificateFormProps> = ({ onCertificateAdded }) => {
-  const [certificateFile, setCertificateFile] = useState<File | null>(null);
-  const [imageUrl, setImageUrl] = useState('');
+  const [certificateTitle, setCertificateTitle] = useState('');
+  const [certificateDescription, setCertificateDescription] = useState('');
+  const [certificateUrl, setCertificateUrl] = useState('');
+  const [certificateDate, setCertificateDate] = useState('');
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      const file = e.target.files[0];
-      if (!file.type.startsWith('image/')) {
-        setError('Please upload a valid image file');
-        return;
-      }
-      setError('');
-      setCertificateFile(file);
-      setImageUrl(URL.createObjectURL(file));
-    }
-  };
-
-  const handleClear = () => {
-    setCertificateFile(null);
-    setImageUrl('');
-    setError('');
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!certificateFile) {
-      setError('Please upload a certificate image');
+    if (!certificateTitle.trim() || !certificateDescription.trim() || !certificateUrl.trim() || !certificateDate.trim()) {
+      setError('Please fill in all fields');
       return;
     }
 
@@ -43,12 +25,21 @@ const AddCertificateForm: React.FC<AddCertificateFormProps> = ({ onCertificateAd
     setError('');
 
     try {
-      await addCertificate(certificateFile); 
-      handleClear();
+      await addCertificate({ 
+        title: certificateTitle, 
+        description: certificateDescription, 
+        imageurl: certificateUrl, 
+        date: certificateDate, 
+        issuedBy: 'Unknown' 
+      });
+      setCertificateTitle('');
+      setCertificateDescription('');
+      setCertificateUrl('');
+      setCertificateDate('');
       onCertificateAdded();
     } catch (err) {
       console.error('Error adding certificate:', err);
-      setError('Failed to upload certificate. Please try again.');
+      setError('Failed to add certificate. Please try again.');
     } finally {
       setIsSubmitting(false);
     }
@@ -70,59 +61,54 @@ const AddCertificateForm: React.FC<AddCertificateFormProps> = ({ onCertificateAd
       )}
 
       <form onSubmit={handleSubmit}>
+        <div className="space-y-2 mb-6">
+          <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
+            Certificate Title*
+          </label>
+          <input
+            type="text"
+            value={certificateTitle}
+            onChange={(e) => setCertificateTitle(e.target.value)}
+            placeholder="Certificate Title"
+            className="block w-full px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg shadow-sm focus:ring-teal-500 focus:border-teal-500 dark:bg-slate-700 dark:text-white"
+          />
+        </div>
 
         <div className="space-y-2 mb-6">
           <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
-            Upload Certificate Image*
+            Certificate Description*
           </label>
+          <textarea
+            value={certificateDescription}
+            onChange={(e) => setCertificateDescription(e.target.value)}
+            placeholder="Certificate Description"
+            className="block w-full px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg shadow-sm focus:ring-teal-500 focus:border-teal-500 dark:bg-slate-700 dark:text-white"
+          />
+        </div>
 
-          <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-dashed border-slate-300 dark:border-slate-600 rounded-lg">
-            <div className="space-y-1 text-center">
-              <Upload className="mx-auto h-12 w-12 text-slate-400" />
-              <div className="flex text-sm text-slate-600 dark:text-slate-400">
-                <label
-                  htmlFor="certificateFile"
-                  className="relative cursor-pointer bg-white dark:bg-slate-700 rounded-md font-medium text-teal-600 dark:text-teal-400 hover:text-teal-500 focus-within:outline-none"
-                >
-                  <span>Upload a file</span>
-                  <input
-                    id="certificateFile"
-                    name="certificateFile"
-                    type="file"
-                    className="sr-only"
-                    onChange={handleFileChange}
-                    accept="image/*"
-                  />
-                </label>
-                <p className="pl-1">or drag and drop</p>
-              </div>
-              <p className="text-xs text-slate-500 dark:text-slate-400">
-                PNG, JPG, JPEG — up to 5MB
-              </p>
-              {certificateFile && (
-                <p className="text-sm text-teal-600 dark:text-teal-400 mt-2">
-                  {certificateFile.name}
-                </p>
-              )}
-            </div>
-          </div>
+        <div className="space-y-2 mb-6">
+          <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
+            Certificate URL*
+          </label>
+          <input
+            type="url"
+            value={certificateUrl}
+            onChange={(e) => setCertificateUrl(e.target.value)}
+            placeholder="https://example.com/certificate"
+            className="block w-full px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg shadow-sm focus:ring-teal-500 focus:border-teal-500 dark:bg-slate-700 dark:text-white"
+          />
+        </div>
 
-          {imageUrl && (
-            <div className="relative mt-4 max-h-72 overflow-auto rounded-lg border border-slate-200 dark:border-slate-600">
-              <img
-                src={imageUrl}
-                alt="Certificate Preview"
-                className="w-full object-contain transition-transform hover:scale-105 duration-500"
-              />
-              <button
-                type="button"
-                onClick={handleClear}
-                className="absolute top-2 right-2 bg-white/80 dark:bg-slate-800/80 rounded-full p-1 text-red-500 hover:text-red-700"
-              >
-                <X size={18} />
-              </button>
-            </div>
-          )}
+        <div className="space-y-2 mb-6">
+          <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
+            Certificate Date*
+          </label>
+          <input
+            type="date"
+            value={certificateDate}
+            onChange={(e) => setCertificateDate(e.target.value)}
+            className="block w-full px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg shadow-sm focus:ring-teal-500 focus:border-teal-500 dark:bg-slate-700 dark:text-white"
+          />
         </div>
 
         <div className="flex justify-end">
@@ -134,10 +120,10 @@ const AddCertificateForm: React.FC<AddCertificateFormProps> = ({ onCertificateAd
             {isSubmitting ? (
               <>
                 <Loader size={18} className="animate-spin mr-2" />
-                Uploading...
+                Adding...
               </>
             ) : (
-              'Upload Certificate'
+              'Add Certificate'
             )}
           </button>
         </div>

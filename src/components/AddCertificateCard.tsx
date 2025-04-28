@@ -4,12 +4,12 @@ import { Trash2 } from 'lucide-react';
 
 interface CertificateCardProps {
   id: string;
-  imageUrl: string;
+  imageurl: string;
   isAuthenticated: boolean;
   onDelete: (id: string) => void;
 }
 
-const CertificateCard: React.FC<CertificateCardProps> = ({ id, imageUrl, isAuthenticated, onDelete }) => {
+const CertificateCard: React.FC<CertificateCardProps> = ({ id, imageurl, isAuthenticated, onDelete }) => {
   const handleDelete = () => {
     if (window.confirm('Are you sure you want to delete this certificate?')) {
       onDelete(id);
@@ -28,7 +28,7 @@ const CertificateCard: React.FC<CertificateCardProps> = ({ id, imageUrl, isAuthe
     >
       <div className="relative overflow-auto h-64 p-2">
         <img
-          src={imageUrl || fallbackImage}
+          src={imageurl || fallbackImage}
           alt="Certificate"
           className="w-full h-auto object-contain transition-transform hover:scale-105 duration-500"
           onError={(e) => {

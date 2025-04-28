@@ -29,7 +29,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, isAuthenticated, onD
     >
       <div className="relative overflow-hidden h-48">
         <img 
-          src={project.imageUrl || fallbackImage} 
+          src={project.imageurl || fallbackImage} 
           alt={`${project.title} screenshot`}
           className="w-full h-full object-cover object-center transition-transform hover:scale-105 duration-500"
           onError={(e) => {
@@ -60,9 +60,9 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, isAuthenticated, onD
           )}
         </div>
         
-        <p className="text-slate-600 dark:text-slate-300 mb-4 line-clamp-3">
+        <div className="text-slate-600 dark:text-slate-300 mb-4 line-clamp-10">
           {project.description}
-        </p>
+        </div>
 
         <div className="flex justify-between items-center">
           <a
@@ -75,9 +75,8 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, isAuthenticated, onD
             <span>View Code</span>
           </a>
           
-          {/* If you have a demo link, you can add it here */}
           <a
-            href={project.githubUrl}
+            href={project.liveDemoUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white transition-colors"

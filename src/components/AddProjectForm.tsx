@@ -11,8 +11,9 @@ const AddProjectForm: React.FC<AddProjectFormProps> = ({ onProjectAdded }) => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [date, setDate] = useState('');
-  const [imageUrl, setImageUrl] = useState('');
+  const [imageurl, setimageurl] = useState('');
   const [githubUrl, setGithubUrl] = useState('');
+  const [liveDemoUrl, setLiveDemoUrl] = useState('');
   const [projectFile, setProjectFile] = useState<File | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
   const [error, setError] = useState('');
@@ -76,16 +77,18 @@ const AddProjectForm: React.FC<AddProjectFormProps> = ({ onProjectAdded }) => {
         title,
         date,
         description,
-        imageUrl,
-        githubUrl
+        imageurl,
+        githubUrl,
+        liveDemoUrl,
       });
 
       // Reset form
       setTitle('');
       setDescription('');
       setDate('');
-      setImageUrl('');
+      setimageurl('');
       setGithubUrl('');
+      setLiveDemoUrl('');
       setProjectFile(null);
       
       onProjectAdded();
@@ -135,7 +138,7 @@ const AddProjectForm: React.FC<AddProjectFormProps> = ({ onProjectAdded }) => {
             </label>
             <input
               id="date"
-              type="text"
+              type="date"
               value={date}
               onChange={(e) => setDate(e.target.value)}
               className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-teal-500 dark:bg-slate-700 dark:text-white"
@@ -161,14 +164,28 @@ const AddProjectForm: React.FC<AddProjectFormProps> = ({ onProjectAdded }) => {
         </div>
 
         <div className="space-y-2 mb-4">
-          <label htmlFor="imageUrl" className="block text-sm font-medium text-slate-700 dark:text-slate-300">
+          <label htmlFor="liveDemoUrl" className="block text-sm font-medium text-slate-700 dark:text-slate-300">
+            Live Demo URL
+          </label>
+          <input
+            id="liveDemoUrl"
+            type="url"
+            value={liveDemoUrl}
+            onChange={(e) => setLiveDemoUrl(e.target.value)}
+            className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-teal-500 dark:bg-slate-700 dark:text-white"
+            placeholder="https://yourproject.com"
+          />
+          </div>
+
+        <div className="space-y-2 mb-4">
+          <label htmlFor="imageurl" className="block text-sm font-medium text-slate-700 dark:text-slate-300">
             Image URL
           </label>
           <input
-            id="imageUrl"
+            id="imageurl"
             type="url"
-            value={imageUrl}
-            onChange={(e) => setImageUrl(e.target.value)}
+            value={imageurl}
+            onChange={(e) => setimageurl(e.target.value)}
             className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-teal-500 dark:bg-slate-700 dark:text-white"
             placeholder="https://example.com/project-image.jpg"
           />
@@ -239,7 +256,8 @@ const AddProjectForm: React.FC<AddProjectFormProps> = ({ onProjectAdded }) => {
             id="description"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            rows={4}
+            rows={10}
+            cols={10}
             className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-teal-500 dark:bg-slate-700 dark:text-white"
             placeholder="Describe your project..."
             required
