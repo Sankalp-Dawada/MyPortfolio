@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import CertificateCard from './CertificateCard'; // Make sure this component exists
+import CertificateCard from './CertificateCard'; // Ensure this component exists
 import { Certificate } from '../types';
 
 interface CertificateListProps {
@@ -10,7 +10,10 @@ interface CertificateListProps {
 }
 
 const CertificateList: React.FC<CertificateListProps> = ({ certificates, isAuthenticated, onDelete }) => {
-  if (certificates.length === 0) {
+  // Ensure certificates is always an array
+  const safeCertificates = Array.isArray(certificates) ? certificates : [];
+
+  if (safeCertificates.length === 0) {
     return (
       <div className="text-center py-12">
         <p className="text-slate-600 dark:text-slate-400 text-lg">
@@ -23,9 +26,9 @@ const CertificateList: React.FC<CertificateListProps> = ({ certificates, isAuthe
   return (
     <AnimatePresence>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {certificates.map((certificate) => (
+        {safeCertificates.map((certificate) => (
           <motion.div
-            key={certificate.id}
+            key={certificate.id || certificate.name} // Fallback to name if id is not available
             layout
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}

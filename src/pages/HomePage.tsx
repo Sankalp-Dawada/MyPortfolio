@@ -18,9 +18,9 @@ const HomePage: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
-    const loadContent = () => {
-      setProjects(getProjects());
-      setCertificates(getCertificates());
+    const loadContent = async () => {
+      setProjects(await getProjects());
+      setCertificates(await getCertificates());
     };
 
     loadContent();
@@ -29,15 +29,15 @@ const HomePage: React.FC = () => {
     return () => window.removeEventListener('storage', loadContent);
   }, []);
 
-  const handleSearch = (query: string) => {
+  const handleSearch = async (query: string) => {
     setSearchQuery(query);
 
     if (query.trim() === '') {
-      setProjects(getProjects());
-      setCertificates(getCertificates());
+      setProjects(await getProjects());
+      setCertificates(await getCertificates());
     } else {
-      setProjects(searchProjects(query));
-      setCertificates(searchCertificates(query));
+      setProjects(await searchProjects(query));
+      setCertificates(await searchCertificates(query));
     }
   };
 

@@ -4,13 +4,16 @@ import ProjectCard from './ProjectCard';
 import { Project } from '../types';
 
 interface ProjectListProps {
-  projects: Project[];
+  projects: Project[];  // Ensures that projects is expected to be an array of Project
   isAuthenticated: boolean;
   onDelete: (id: string) => void;
 }
 
 const ProjectList: React.FC<ProjectListProps> = ({ projects, isAuthenticated, onDelete }) => {
-  if (projects.length === 0) {
+  // Ensure projects is always an array (even if it's null or undefined)
+  const safeProjects = Array.isArray(projects) ? projects : [];
+
+  if (safeProjects.length === 0) {
     return (
       <div className="text-center py-12">
         <p className="text-slate-600 dark:text-slate-400 text-lg">
@@ -23,7 +26,7 @@ const ProjectList: React.FC<ProjectListProps> = ({ projects, isAuthenticated, on
   return (
     <AnimatePresence>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {projects.map((project) => (
+        {safeProjects.map((project) => (
           <motion.div
             key={project.id}
             layout

@@ -13,7 +13,6 @@ import {
 } from 'firebase/firestore';
 import { User } from '../types';
 
-// Firebase configuration - replace with your actual config values
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
   authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
@@ -118,10 +117,7 @@ export const loginWithEmail = async (email: string, password: string): Promise<U
 // Logout user
 export const logoutUser = async (): Promise<boolean> => {
   try {
-    // Clear admin session
     sessionStorage.removeItem('adminUser');
-    
-    // Sign out from Firebase Auth (if signed in)
     await signOut(auth);
     return true;
   } catch (error) {
@@ -129,3 +125,6 @@ export const logoutUser = async (): Promise<boolean> => {
     return false;
   }
 };
+
+
+export { db , auth};
