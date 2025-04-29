@@ -1,12 +1,14 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { PlusCircle, Award } from 'lucide-react';
+import Header from '../components/Header';
 
 const AddItemSelection: React.FC = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-slate-100 dark:bg-slate-900 p-6">
+    
+    <><Header onSearch={() => { } } /><div className="min-h-screen flex flex-col items-center justify-center bg-slate-100 dark:bg-slate-900 p-6">
       <h1 className="text-3xl font-bold text-slate-900 dark:text-white mb-10">
         What would you like to add?
       </h1>
@@ -28,7 +30,7 @@ const AddItemSelection: React.FC = () => {
           Add Certificate
         </button>
       </div>
-    </div>
+    </div></>
   );
 };
 

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import Header from '../components/Header';
 import Hero from '../components/Hero';
@@ -12,6 +13,7 @@ import { Project, Certificate } from '../types';
 
 const HomePage: React.FC = () => {
   const { isAuthenticated } = useAuth();
+  const location = useLocation();
 
   const [projects, setProjects] = useState<Project[]>([]);
   const [certificates, setCertificates] = useState<Certificate[]>([]);
@@ -28,6 +30,16 @@ const HomePage: React.FC = () => {
     window.addEventListener('storage', loadContent);
     return () => window.removeEventListener('storage', loadContent);
   }, []);
+
+  useEffect(() => {
+    if (location.hash) {
+      const id = location.hash.replace('#', '');
+      const element = document.getElementById(id);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+  }, [location]);
 
   const handleSearch = async (query: string) => {
     setSearchQuery(query);
@@ -59,10 +71,12 @@ const HomePage: React.FC = () => {
     <div className="min-h-screen bg-white dark:bg-slate-900 flex flex-col">
       <Header onSearch={handleSearch} />
       <main className="flex-grow">
-        <Hero />
+        <section id= "about">
+          <Hero />
+        </section>
 
         {/* Projects Section */}
-        <section id="projects" className="py-16 bg-white dark:bg-slate-900">
+        <section id="projects" className="scroll-mt-24 py-16 bg-white dark:bg-slate-900">
           <div className="container mx-auto px-4">
             <div className="mb-12">
               <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-4">
@@ -84,7 +98,7 @@ const HomePage: React.FC = () => {
         </section>
 
         {/* Certificates Section */}
-        <section id="certificates" className="py-16 bg-white dark:bg-slate-900">
+        <section id="certificates" className="scroll-mt-24 py-16 bg-white dark:bg-slate-900">
           <div className="container mx-auto px-4">
             <div className="mb-12">
               <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-4">
