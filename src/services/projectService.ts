@@ -98,7 +98,7 @@ export const generateProjectDescription = async (fileContent: string): Promise<s
     }
 
     const firstFewLines = lines.slice(0, 5).join(' ');
-    return `Project based on ${firstFewLines.substring(0, 200)}...`;
+    return `${firstFewLines.substring(0,)}`;
 
   } catch (error) {
     console.error('Error generating description:', error);
