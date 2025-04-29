@@ -65,43 +65,41 @@ export const searchProjects = async (queryStr: string): Promise<Project[]> => {
 
 export const generateProjectDescription = async (fileContent: string): Promise<string> => {
   try {
-    const lines = fileContent.split('\n').filter(line => line.trim() !== '');
+    const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
 
-    if (lines.length === 0) {
-      return "This project doesn't have a description yet.";
+    const prompt = `
+      Analyze the following source code and generate a concise description of what the project does.
+      Focus on functionality, purpose, and avoid repeating the code.
+
+      Code:
+      ${fileContent}
+    `;
+
+    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        contents: [
+          {
+            parts: [{ text: prompt }],
+            role: 'user'
+          }
+        ]
+      })
+    });
+
+    const result = await response.json();
+
+    if (result.candidates && result.candidates.length > 0) {
+      return result.candidates[0].content.parts[0].text;
+    } else {
+      console.error('No description candidates returned from Gemini:', result);
+      return "No description could be generated.";
     }
-
-    const commentBlockLines = [];
-    let inCommentBlock = false;
-
-    for (const line of lines.slice(0, 20)) {
-      if (line.includes('/**') || line.includes('/*')) {
-        inCommentBlock = true;
-        continue;
-      }
-
-      if (inCommentBlock) {
-        if (line.includes('*/')) {
-          inCommentBlock = false;
-          break;
-        }
-
-        const cleanedLine = line.replace(/^\s*\*\s*/, '').trim();
-        if (cleanedLine) {
-          commentBlockLines.push(cleanedLine);
-        }
-      }
-    }
-
-    if (commentBlockLines.length > 0) {
-      return commentBlockLines.join(' ');
-    }
-
-    const firstFewLines = lines.slice(0, 5).join(' ');
-    return `${firstFewLines.substring(0,)}`;
-
   } catch (error) {
-    console.error('Error generating description:', error);
+    console.error('Error generating description via Gemini API:', error);
     return "Failed to generate description. Please enter manually.";
   }
 };
