@@ -59,7 +59,7 @@ const CertificateCard: React.FC<CertificateCardProps> = ({ certificate, isAuthen
           )}
         </div>
 
-        <p className="text-slate-600 dark:text-slate-300 mb-4 line-clamp-3">
+        <p className="text-slate-600 dark:text-slate-300 mb-4 line-clamp-10">
           {certificate.description}
         </p>
 
