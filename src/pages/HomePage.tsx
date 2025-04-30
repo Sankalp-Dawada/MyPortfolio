@@ -4,11 +4,11 @@ import { useAuth } from '../context/AuthContext';
 import Header from '../components/Header';
 import Hero from '../components/Hero';
 import ProjectList from '../components/ProjectList';
-import CertificateList from '../components/CertificateList'; 
+import CertificateList from '../components/CertificateList';
 import FloatingActionButton from '../components/FloatingActionButton';
 import Footer from '../components/Footer';
-import { getProjects, deleteProject, searchProjects } from '../services/projectService';
-import { getCertificates, deleteCertificate, searchCertificates } from '../services/certificateService'; 
+import { getProjects, deleteProject, searchProjects, updateProject } from '../services/projectService'; 
+import { getCertificates, deleteCertificate, searchCertificates, updateCertificate } from '../services/certificateService';  
 import { Project, Certificate } from '../types';
 
 const HomePage: React.FC = () => {
@@ -21,8 +21,11 @@ const HomePage: React.FC = () => {
 
   useEffect(() => {
     const loadContent = async () => {
-      setProjects(await getProjects());
-      setCertificates(await getCertificates());
+      const loadedProjects = await getProjects();
+      const loadedCertificates = await getCertificates();
+
+      setProjects(sortByDate(loadedProjects));
+      setCertificates(sortByDate(loadedCertificates));
     };
 
     loadContent();
@@ -45,11 +48,11 @@ const HomePage: React.FC = () => {
     setSearchQuery(query);
 
     if (query.trim() === '') {
-      setProjects(await getProjects());
-      setCertificates(await getCertificates());
+      setProjects(sortByDate(await getProjects()));
+      setCertificates(sortByDate(await getCertificates()));
     } else {
-      setProjects(await searchProjects(query));
-      setCertificates(await searchCertificates(query));
+      setProjects(sortByDate(await searchProjects(query)));
+      setCertificates(sortByDate(await searchCertificates(query)));
     }
   };
 
@@ -67,11 +70,29 @@ const HomePage: React.FC = () => {
     }
   };
 
+  const handleEditProject = async (id: string, updatedData: any) => {
+    const updatedProject = await updateProject(id, updatedData);
+    if (updatedProject) {
+      setProjects(prev => prev.map(p => (p.id === id ? updatedProject : p)));
+    }
+  };
+
+  const handleEditCertificate = async (id: string, updatedData: any) => {
+    const updatedCertificate = await updateCertificate(id, updatedData);
+    if (updatedCertificate) {
+      setCertificates(prev => prev.map(c => (c.id === id ? updatedCertificate : c)));
+    }
+  };
+
+  const sortByDate = <T extends { date: string }>(items: T[]): T[] => {
+    return [...items].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+  };
+
   return (
     <div className="min-h-screen bg-white dark:bg-slate-900 flex flex-col">
       <Header onSearch={handleSearch} />
       <main className="flex-grow">
-        <section id= "about">
+        <section id="about">
           <Hero />
         </section>
 
@@ -93,6 +114,7 @@ const HomePage: React.FC = () => {
               projects={projects}
               isAuthenticated={isAuthenticated}
               onDelete={handleDeleteProject}
+              onEdit={handleEditProject} 
             />
           </div>
         </section>
@@ -115,6 +137,7 @@ const HomePage: React.FC = () => {
               certificates={certificates}
               isAuthenticated={isAuthenticated}
               onDelete={handleDeleteCertificate}
+              onEdit={handleEditCertificate} 
             />
           </div>
         </section>
